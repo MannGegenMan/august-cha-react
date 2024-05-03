@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import './App.css';
 import {useTelegram} from "./hooks/useTelegram"
+import Header from "./components/Header/Header"
 
 
 function App() {
@@ -12,13 +13,9 @@ function App() {
     }
    }, []);
 
-const onClose = () => {
-  tg.close()
-}
-
-
   return (
     <div className="App">
+      <Header />
       <button onClick={onToggleButton}>toggle</button>
     </div>
   );
