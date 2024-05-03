@@ -7,7 +7,9 @@ function App() {
   const {onToggleButton, tg} = useTelegram();
 
   useEffect(() => {
-    tg.ready();
+    if (tg && typeof tg.ready === 'function') {
+       tg.ready();
+    }
    }, []);
 
 const onClose = () => {
