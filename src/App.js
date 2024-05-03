@@ -17,7 +17,7 @@ const onClose = () => {
 
   return (
     <div className="App">
-      work
+      <p>Salam</p>
       <button onClick={onToggleButton}>toggle</button>
     </div>
   );
