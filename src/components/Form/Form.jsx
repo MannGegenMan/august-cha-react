@@ -1,42 +1,76 @@
-import React, { useEffect, useState } from 'react';
-import { useTelegram } from "../../hooks/useTelegram"; // Убедитесь, что путь к хуку правильный
+import React, {useCallback, useEffect, useState} from 'react';
+import './Form.css';
+import {useTelegram} from "../../hooks/useTelegram";
 
 const Form = () => {
-    const { tg } = useTelegram();
     const [country, setCountry] = useState('');
     const [street, setStreet] = useState('');
+    const [subject, setSubject] = useState('physical');
+    const {tg} = useTelegram();
+
+    const onSendData = useCallback(() => {
+        const data = {
+            country,
+            street,
+            subject
+        }
+        tg.sendData(JSON.stringify(data));
+    }, [country, street, subject])
 
     useEffect(() => {
-        // Проверяем, что tg и tg.MainButton доступны
-        if (tg && tg.MainButton) {
-            // Скрываем кнопку, если поля пусты
-            if (!country ||!street) {
-                tg.MainButton.hide();
-            } else {
-                // Показываем кнопку, если поля заполнены
-                tg.MainButton.show();
-            }
+        tg.onEvent('mainButtonClicked', onSendData)
+        return () => {
+            tg.offEvent('mainButtonClicked', onSendData)
         }
-    }, [country, street, tg]); // Зависимости useEffect
+    }, [onSendData])
+
+    useEffect(() => {
+        tg.MainButton.setParams({
+            text: 'Отправить данные'
+        })
+    }, [])
+
+    useEffect(() => {
+        if(!street || !country) {
+            tg.MainButton.hide();
+        } else {
+            tg.MainButton.show();
+        }
+    }, [country, street])
+
+    const onChangeCountry = (e) => {
+        setCountry(e.target.value)
+    }
+
+    const onChangeStreet = (e) => {
+        setStreet(e.target.value)
+    }
+
+    const onChangeSubject = (e) => {
+        setSubject(e.target.value)
+    }
 
     return (
-        <div className="form">
+        <div className={"form"}>
             <h3>Введите ваши данные</h3>
-            <input 
-                className="input" 
-                type="text" 
-                placeholder="Страна"
+            <input
+                className={'input'}
+                type="text"
+                placeholder={'Страна'}
                 value={country}
-                onChange={(e) => setCountry(e.target.value)}
+                onChange={onChangeCountry}
             />
-            <input 
-                className="input" 
-                type="text" 
-                placeholder="Улица"
+            <input
+                className={'input'}
+                type="text"
+                placeholder={'Улица'}
                 value={street}
-                onChange={(e) => setStreet(e.target.value)}
+                onChange={onChangeStreet}
             />
-            {/* Другие элементы формы */}
+            <select value={subject} onChange={onChangeSubject} className={'select'}>
+                <option value={'physical'}>Физ. лицо</option>
+                <option value={'legal'}>Юр. лицо</option>
+            </select>
         </div>
     );
 };
