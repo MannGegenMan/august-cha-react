@@ -17,10 +17,12 @@ const Form = () => {
     }, []); 
 
     useEffect(() => {
-        if (!street ||!country) {
-            tg.MainButton.hide();
-        } else {
-            tg.MainButton.show();
+        if (tg && tg.MainButton) {
+            if (!street ||!country) {
+                tg.MainButton.hide();
+            } else {
+                tg.MainButton.show();
+            }
         }
     }, [country, street]);
 
