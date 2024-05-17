@@ -1,64 +1,42 @@
 import React, { useEffect, useState } from 'react';
-import './Form.css';
-import { useTelegram } from "../../hooks/useTelegram";
+import { useTelegram } from "../../hooks/useTelegram"; // Убедитесь, что путь к хуку правильный
 
 const Form = () => {
+    const { tg } = useTelegram();
     const [country, setCountry] = useState('');
     const [street, setStreet] = useState('');
-    const [subject, setSubject] = useState('physical');
-    const { tg } = useTelegram();
 
     useEffect(() => {
+        // Проверяем, что tg и tg.MainButton доступны
         if (tg && tg.MainButton) {
-            tg.MainButton.setParams({}, {
-                text: 'Отправить данные'
-            });
-        }
-    }, []); 
-
-    useEffect(() => {
-        if (tg && tg.MainButton) {
-            if (!street ||!country) {
+            // Скрываем кнопку, если поля пусты
+            if (!country ||!street) {
                 tg.MainButton.hide();
             } else {
+                // Показываем кнопку, если поля заполнены
                 tg.MainButton.show();
             }
         }
-    }, [country, street]);
-
-    const onChangeCountry = (e) => {
-        setCountry(e.target.value);
-    };
-
-    const onChangeStreet = (e) => {
-        setStreet(e.target.value);
-    };
-
-    const onChangeSubject = (e) => {
-        setSubject(e.target.value);
-    };
+    }, [country, street, tg]); // Зависимости useEffect
 
     return (
-        <div className={'form'}>
+        <div className="form">
             <h3>Введите ваши данные</h3>
             <input 
-                className={'input'} 
-                type='text' 
-                placeholder={'Страна'}
+                className="input" 
+                type="text" 
+                placeholder="Страна"
                 value={country}
-                onChange={onChangeCountry}
+                onChange={(e) => setCountry(e.target.value)}
             />
             <input 
-                className={'input'} 
-                type='text' 
-                placeholder={'Улица'}
+                className="input" 
+                type="text" 
+                placeholder="Улица"
                 value={street}
-                onChange={onChangeStreet}
+                onChange={(e) => setStreet(e.target.value)}
             />
-            <select value={subject} onChange={onChangeSubject} className={'select'}>
-                <option value={'physical'}>Физ. лицо</option>
-                <option value={'legal'}>Юр. лицо</option>
-            </select>
+            {/* Другие элементы формы */}
         </div>
     );
 };
