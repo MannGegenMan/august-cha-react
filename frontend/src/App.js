@@ -1,58 +1,50 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Box } from '@mui/material';
 import SearchBar from './components/SearchBar';
-import CategoryTabs from './components/CategoryTabs';
 import ProductList from './components/ProductList';
-import Cart from './components/Cart';
+import CategoryTabs from './components/CategoryTabs';
 
 function App() {
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
-  const [cartItems, setCartItems] = useState([]);
 
   useEffect(() => {
-    // Fetch products and categories from API
-    // This is where you'd make API calls to your backend
+    // Здесь будет логика загрузки продуктов и категорий
+    // Например:
+    // fetchProducts().then(setProducts);
+    // fetchCategories().then(setCategories);
   }, []);
 
   const handleSearch = (term) => {
     setSearchTerm(term);
+    // Здесь может быть дополнительная логика поиска
   };
 
   const handleCategorySelect = (category) => {
     setSelectedCategory(category);
-  };
-
-  const handleAddToCart = (product) => {
-    setCartItems([...cartItems, product]);
+    // Здесь может быть дополнительная логика фильтрации по категории
   };
 
   return (
-    <Container>
-      <Box mb={2}>
+    <div className="App">
+      <header className="App-header">
+        <h1>Welcome to our Tea Shop</h1>
         <SearchBar onSearch={handleSearch} />
-      </Box>
-      <Box mb={2}>
         <CategoryTabs 
           categories={categories} 
           selectedCategory={selectedCategory}
           onSelectCategory={handleCategorySelect}
         />
-      </Box>
-      <Box mb={2}>
+      </header>
+      <main>
         <ProductList 
           products={products}
           searchTerm={searchTerm}
           selectedCategory={selectedCategory}
-          onAddToCart={handleAddToCart}
         />
-      </Box>
-      <Box>
-        <Cart items={cartItems} />
-      </Box>
-    </Container>
+      </main>
+    </div>
   );
 }
 
