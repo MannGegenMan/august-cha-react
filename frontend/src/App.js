@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import SearchBar from './components/SearchBar';
 import ProductList from './components/ProductList';
 import CategoryTabs from './components/CategoryTabs';
@@ -10,20 +11,27 @@ function App() {
   const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
-    // Здесь будет логика загрузки продуктов и категорий
-    // Например:
-    // fetchProducts().then(setProducts);
-    // fetchCategories().then(setCategories);
+    const fetchData = async () => {
+      try {
+        const productsResponse = await axios.get('your_api_url/products');
+        setProducts(productsResponse.data);
+
+        const categoriesResponse = await axios.get('your_api_url/categories');
+        setCategories(categoriesResponse.data);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+
+    fetchData();
   }, []);
 
   const handleSearch = (term) => {
     setSearchTerm(term);
-    // Здесь может быть дополнительная логика поиска
   };
 
   const handleCategorySelect = (category) => {
     setSelectedCategory(category);
-    // Здесь может быть дополнительная логика фильтрации по категории
   };
 
   return (
